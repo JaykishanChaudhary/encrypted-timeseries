@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs');
+// const {socket}=require('socket.io');
 
 // Define your secret key
 // const secretKey = process.env.SECRET_KEY
@@ -32,7 +33,8 @@ function getRandomElementFromArray(array) {
 
 const SelectData = {
     name: getRandomElementFromArray(Data.names),
-    city: getRandomElementFromArray(Data.cities)
+    origin: getRandomElementFromArray(Data.cities),
+    destination: getRandomElementFromArray(Data.cities)
 };
 console.log('SelectData', SelectData);
 
@@ -44,35 +46,31 @@ hash.update(objectJson);
 const hashValue = hash.digest('hex');
 
 // Use the hash value as the secret key
-// const secretKey = hashValue;
-const secretKey = hashValue.slice(0, 32); 
+const secretKey = hashValue;
+// const secretKey = hashValue.slice(0, 32); 
 console.log('Secret Key:', secretKey);
 SelectData.secretKey=secretKey;
 console.log('SelectData', SelectData);
 
-// .............................................................
-// const StringSelectedData = JSON.stringify(SelectData);
 
+console.log('passkey',process.env.PASS_KEY);
+// Passphrase (string) and salt (random value)
+const passphrase = process.env.PASS_KEY;
+const salt = crypto.randomBytes(16); // 16 bytes
 
-// const hmac = crypto.createHmac('sha256', secretKey);
+// Derive a 256-bit key using PBKDF2
+const key = crypto.pbkdf2Sync(passphrase, salt, 100000, 32, 'sha256');
 
+console.log('Derived Key:', key.toString('hex'));
 
-// hmac.update(StringSelectedData);
-
-
-// const hmacHashValue = hmac.digest('hex');
-// return ('HMAC Hash Value:', hmacHashValue);
-const encryptedHashValue = encryptAES(SelectData, secretKey);
+const encryptedHashValue = encryptAES(SelectData, key);
 console.log('Encrypted Hash Value:', encryptedHashValue);
 
 return encryptedHashValue;
 }
 
 
-
-setInterval(()=>{
-    const hashValue=GenerateHashString();
-    console.log(hashValue);
-    module.exports=hashValue;
-},10000)
+const hashValue=GenerateHashString();
+console.log(hashValue);
+module.exports=GenerateHashString;
 // module.exports = hmacHashValue;

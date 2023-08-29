@@ -4,10 +4,9 @@ const app=express();
 require('dotenv').config();
 const path=require('path');
 // const HashValue=require('./src/RandomString');
-const hashValue = require('./src/RandomString');
 
 
-const port=process.env.PORT||8080;
+const port=process.env.EMITTER_PORT;
 
 const http=require('http').Server(app);
 
@@ -19,19 +18,20 @@ io.on('connection',(socket)=>{
         console.log('A user disconnected');
     })
 
-    socket.on('messege',msg=>{
-        console.log( msg);
-    })
 
     socket.emit("server1",'messege from server1');
-    socket.emit("server2",'messege from server2');
 })
 
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,'src/index.html'))
 })
 
-console.log(hashValue)
+setInterval(()=>{
+    const hashValue = require('./src/RandomString');
+    console.log(hashValue)
+    io.emit('EncryptedString',hashValue());
+},10000)
+
 http.listen(port,()=>{
     console.log(`server is listening on ${port}`);
 })
