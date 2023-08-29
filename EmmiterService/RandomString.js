@@ -19,6 +19,7 @@ function encryptAES(data, key) {
 }
 
 
+
 function GenerateHashString(){
 
 // const hash = crypto.createHash('sha256');
@@ -56,7 +57,7 @@ console.log('SelectData', SelectData);
 console.log('passkey',process.env.PASS_KEY);
 // Passphrase (string) and salt (random value)
 const passphrase = process.env.PASS_KEY;
-const salt = crypto.randomBytes(16); // 16 bytes
+let salt =process.env.SALT;
 
 // Derive a 256-bit key using PBKDF2
 const key = crypto.pbkdf2Sync(passphrase, salt, 100000, 32, 'sha256');
@@ -73,4 +74,4 @@ return encryptedHashValue;
 const hashValue=GenerateHashString();
 console.log(hashValue);
 module.exports=GenerateHashString;
-// module.exports = hmacHashValue;
+

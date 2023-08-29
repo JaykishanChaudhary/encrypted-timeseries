@@ -1,12 +1,30 @@
 const crypto=require('crypto');
-const EncryptedData=require('../ListenerService/Listener');
-const secretKey=process.env.SCERET_KEY
+require('dotenv').config();
 
-function DecryptData(EncryptedData){
+let salt =process.env.SALT;
+console.log(salt);
+
+
+
+
+function DecryptData(EncryptedData,secretKey){
     const combinedBuffer = Buffer.from(EncryptedData, 'base64');
     const IV=combinedBuffer.slice(0,16);
-    const ecryptedPayload=combinedBuffer.slice(16);
+    const encryptedPayload=combinedBuffer.slice(16);
+    // console.log(secretKey);
+    console.log('secretKey:', secretKey);
+    const key = crypto.pbkdf2Sync(secretKey, salt, 100000, 32, 'sha256');
 
-    const Decipher=crypto.createCipheriv('aes-256-ctr',)
+    console.log('Derived Key:', key.toString('hex'));
+    //  key=Buffer.from(secretKey,'hex');
+
+    const Decipher=crypto.createCipheriv('aes-256-ctr',key,IV)
+
+    let decryptData=Decipher.update(encryptedPayload,'base64','utf-8');
+    decryptData+=Decipher.final('utf-8');
+
+    return decryptData
 }
+
+module.exports=DecryptData;
 

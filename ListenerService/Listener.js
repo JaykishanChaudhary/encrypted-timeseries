@@ -1,8 +1,12 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
 const http = require('http').Server(app);
 const io = require('socket.io-client');
+const DecryptFunc=require('./DecodeData');
+require('dotenv').config();
+// const EncryptedData=require('../ListenerService/Listener');
+const secretKey=process.env.PASS_KEY;
+console.log(secretKey);
 
 const port = process.env.LISTENER_PORT || 5000;
 
@@ -10,7 +14,10 @@ const emitterServiceURL = 'http://localhost:8080'; // Replace with the emitter s
 
 const Socket = io(emitterServiceURL);
 
+
+
 let EncryptedData;
+let DecryptedDtata;
 
 Socket.on('connect', () => {
     console.log('Connected to emitter service');
@@ -20,6 +27,8 @@ Socket.on('connect', () => {
         console.log('Received hashValue from emitter:', hashValue);
         // Here you can use the received hashValue as needed
         EncryptedData=hashValue;
+        DecryptedDtata=DecryptFunc(EncryptedData,secretKey);
+        console.log(DecryptedDtata);
     });
 });
 
@@ -32,4 +41,5 @@ app.listen(port, () => {
 });
 
 
-module.exports=EncryptedData;
+// module.exports=EncryptedData;
+module.exports=DecryptedDtata;
