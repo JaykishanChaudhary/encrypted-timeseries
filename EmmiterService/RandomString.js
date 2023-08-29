@@ -26,6 +26,11 @@ function GenerateHashString(){
 const DataFromFile = fs.readFileSync('data.json');
 const Data = JSON.parse(DataFromFile);
 // console.log(Data);
+let max=499;
+let min =49;
+const RandomNumber=Math.floor(Math.random()*(max-min))+min;
+let DataStream='';
+for(let i=0;i<RandomNumber;i++){
 
 function getRandomElementFromArray(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
@@ -66,8 +71,12 @@ console.log('Derived Key:', key.toString('hex'));
 
 const encryptedHashValue = encryptAES(SelectData, key);
 console.log('Encrypted Hash Value:', encryptedHashValue);
+DataStream+=encryptedHashValue
+DataStream+='|'
 
-return encryptedHashValue;
+}
+DataStream=DataStream.slice(0,-1);
+return DataStream
 }
 
 
