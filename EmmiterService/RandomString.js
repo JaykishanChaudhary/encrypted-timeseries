@@ -26,8 +26,8 @@ function GenerateHashString(){
 const DataFromFile = fs.readFileSync('data.json');
 const Data = JSON.parse(DataFromFile);
 // console.log(Data);
-let max=499;
-let min =49;
+let max=6;
+let min =3;
 const RandomNumber=Math.floor(Math.random()*(max-min))+min;
 let DataStream='';
 for(let i=0;i<RandomNumber;i++){

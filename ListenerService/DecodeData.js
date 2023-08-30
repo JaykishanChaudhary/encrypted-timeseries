@@ -1,5 +1,6 @@
 const crypto=require('crypto');
 require('dotenv').config();
+const saveObjectInDb=require('./StoreData');
 
 let salt =process.env.SALT;
 console.log(salt);
@@ -7,9 +8,8 @@ console.log(salt);
 
 
 
-function DecryptData(EncryptedData,secretKey){
+function DecryptAndSaveFunc(EncryptedData,secretKey){
     let arr=EncryptedData.split("|");
-    let DataObj=[];
     for(let i=0;i<arr.length;i++){
         const combinedBuffer = Buffer.from(arr[i], 'base64');
         const IV=combinedBuffer.slice(0,16);
@@ -22,19 +22,15 @@ function DecryptData(EncryptedData,secretKey){
         //  key=Buffer.from(secretKey,'hex');
         try{
             const Decipher=crypto.createCipheriv('aes-256-ctr',key,IV)
-    
-        let decryptData=Decipher.update(encryptedPayload,'base64','utf-8');
-        decryptData+=Decipher.final('utf-8');
-
-        DataObj.push(decryptData);
-
+            let decryptData=Decipher.update(encryptedPayload,'base64','utf-8');
+            decryptData+=Decipher.final('utf-8');
+            console.log(decryptData);
+            saveObjectInDb(decryptData)
         }catch(err){
             continue;
         }
-        
     }
-    return DataObj
 }
 
-module.exports=DecryptData;
+module.exports=DecryptAndSaveFunc;
 

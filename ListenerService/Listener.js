@@ -1,10 +1,18 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
 const io = require('socket.io-client');
-const DecryptFunc=require('./DecodeData');
+const DecryptAndSaveFunc=require('./DecodeData');
 require('dotenv').config();
-// const EncryptedData=require('../ListenerService/Listener');
+const mogoose=require('mongoose');
+
+const MongoDBString=process.env.MONGODB_CONNECTION_STRING;
+mogoose.connect(MongoDBString,{useNewUrlParser:true,useUnifiedTopology:true})
+.then(()=>{
+    console.log('connected to DB');
+}).catch(err=>{
+    console.error(err);
+})
+
 const secretKey=process.env.PASS_KEY;
 console.log(secretKey);
 
@@ -27,8 +35,7 @@ Socket.on('connect', () => {
         console.log('Received hashValue from emitter:', hashValue);
         // Here you can use the received hashValue as needed
         EncryptedData=hashValue;
-        DecryptedDtata=DecryptFunc(EncryptedData,secretKey);
-        console.log(DecryptedDtata);
+        DecryptAndSaveFunc(EncryptedData,secretKey);
     });
 });
 
