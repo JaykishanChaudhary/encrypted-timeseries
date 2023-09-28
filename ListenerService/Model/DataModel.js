@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-// const decryptedData=require('../Listener');
+
 const DataElementSchema = new mongoose.Schema({
     name: {
         type: String
@@ -21,7 +21,6 @@ const DataTimeSeriesSchema=new mongoose.Schema({
         default: Date.now 
     },
     Data:[DataElementSchema]
-    
 },)
 
 // Indexing on the timestamp field for efficient queries
