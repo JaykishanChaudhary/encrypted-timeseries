@@ -1,9 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs');
-// const {socket}=require('socket.io');
 
-// Define your secret key
-// const secretKey = process.env.SECRET_KEY
 
 function encryptAES(data, key) {
     const iv = crypto.randomBytes(16);
@@ -22,10 +19,10 @@ function encryptAES(data, key) {
 
 function GenerateHashString(){
 
-// const hash = crypto.createHash('sha256');
+
 const DataFromFile = fs.readFileSync('data.json');
 const Data = JSON.parse(DataFromFile);
-// console.log(Data);
+
 let max=6;
 let min =3;
 const RandomNumber=Math.floor(Math.random()*(max-min))+min;
@@ -60,7 +57,6 @@ console.log('SelectData', SelectData);
 
 
 console.log('passkey',process.env.PASS_KEY);
-// Passphrase (string) and salt (random value)
 const passphrase = process.env.PASS_KEY;
 let salt =process.env.SALT;
 

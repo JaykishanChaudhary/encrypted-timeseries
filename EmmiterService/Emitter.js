@@ -2,7 +2,6 @@ const express=require('express');
 const { Socket } = require('socket.io');
 const app=express();
 require('dotenv').config();
-// const HashValue=require('./src/RandomString');
 
 
 const port=process.env.EMITTER_PORT;

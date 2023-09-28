@@ -5,10 +5,8 @@ const currentMinuteStart = moment().startOf('minute');
 async function saveObjectInDb(dataObj) {
     // Parse the input string as JSON
     const inputData = JSON.parse(dataObj);
-    // const dbObj = new TimeseriesModel.DataElement(inputData)
     try {
         const result = await TimeseriesModel.DataModel.updateOne(
-            // { timestamp: currentMinuteStart },
             { timestamp: {
                 $gte: currentMinuteStart.toDate(), // Convert moment object to Date
                 $lt: moment(currentMinuteStart).add(1, 'minutes').toDate() // Add 1 minute to get the end of the minute
